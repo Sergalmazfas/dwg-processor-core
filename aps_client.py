@@ -60,13 +60,13 @@ class APSClient:
         }
         
         # Activity для DWG→DWG с шаблоном
-        # Используем базовую Activity Autodesk.AutoCAD+25 для открытия/сохранения
+        # Используем стандартную Activity AutoCAD.PlotToPDF для обработки
+        # (Базовая Activity которая всегда доступна)
         body = {
-            "activityId": "Autodesk.AutoCAD+25",
+            "activityId": "Autodesk.AutoCAD+24",
             "arguments": {
                 "HostDwg": {
-                    "url": input_dwg_url,
-                    "verb": "get"
+                    "url": input_dwg_url
                 },
                 "Result": {
                     "url": output_dwg_url,
