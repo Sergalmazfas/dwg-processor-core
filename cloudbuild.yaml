@@ -1,0 +1,58 @@
+steps:
+  # Тест DWG→DWG pipeline перед деплоем
+  - name: 'python:3.11'
+    id: 'test-dwg-pipeline'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "🧪 Запуск теста DWG→DWG pipeline..."
+        pip install --quiet google-cloud-storage google-cloud-secret-manager requests
+        python3 test_postman_pipeline.py
+        if [ $? -eq 0 ]; then
+          echo "✅ DWG Pipeline тест пройден!"
+        else
+          echo "❌ DWG Pipeline тест провален!"
+          exit 1
+        fi
+  
+  # Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/dwg-processor-core:latest', '.']
+  
+  # Push Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/dwg-processor-core:latest']
+  
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'dwg-processor-core'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/dwg-processor-core:latest'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--timeout'
+      - '900'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--max-instances'
+      - '10'
+      - '--min-instances'
+      - '0'
+      - '--set-secrets'
+      - 'FORGE_CLIENT_ID=FORGE_CLIENT_ID:latest,FORGE_CLIENT_SECRET=FORGE_CLIENT_SECRET:latest,FORGE_SERVICE_KEY=FORGE_SERVICE_KEY:latest'
+      - '--service-account'
+      - '637190449180-compute@developer.gserviceaccount.com'
+
+images:
+  - 'gcr.io/$PROJECT_ID/dwg-processor-core:latest'
+
