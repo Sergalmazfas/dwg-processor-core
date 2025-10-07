@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  PackageContents.xml для AutoCAD AppBundle
+  Формат согласно официальной документации Autodesk APS
+  Reference: https://aps.autodesk.com/en/docs/design-automation/v3/
+-->
+<ApplicationPackage
+    SchemaVersion="1.0"
+    AutodeskProduct="AutoCAD"
+    ProductType="Application"
+    Name="BTE Insert Template"
+    Description="Inserts BTE template into DWG files"
+    AppVersion="1.0.0"
+    Author="BTI Team"
+    ProductCode="{BTE00000-0000-0000-0000-000000000001}">
+  
+  <CompanyDetails
+      Name="BTI"
+      Url="https://github.com/Sergalmazfas/dwg-processor-core"
+      Email="support@bti.com"/>
+  
+  <Components Description="BTE Insert Template Plugin">
+    <RuntimeRequirements
+        OS="Win64"
+        Platform=".NET"
+        SeriesMin="R25.0"
+        SeriesMax="R25.0"/>
+    
+    <ComponentEntry
+        AppName="InsertTemplate"
+        ModuleName="./Contents/Windows/InsertTemplate.dll"
+        AppDescription="BTE Template Inserter for AutoCAD"
+        LoadOnAutoCADStartup="True"
+        LoadOnCommandInvocation="False"/>
+  </Components>
+</ApplicationPackage>
+

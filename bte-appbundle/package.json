@@ -1,0 +1,7 @@
+{
+  "id": "InsertTemplateAppBundle",
+  "version": "1.0.0",
+  "engine": "Autodesk.AutoCAD+25_0",
+  "description": "AppBundle that inserts BTE template into DWG - Official APS format"
+}
+
