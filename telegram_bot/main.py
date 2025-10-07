@@ -29,6 +29,24 @@ if not BOT_TOKEN:
 # Создаем Telegram application
 telegram_app = create_application(BOT_TOKEN)
 
+# Инициализация приложения (обязательно для python-telegram-bot 20+)
+import asyncio
+import threading
+
+# Создаем event loop в отдельном потоке
+loop = asyncio.new_event_loop()
+
+def run_loop():
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
+
+loop_thread = threading.Thread(target=run_loop, daemon=True)
+loop_thread.start()
+
+# Инициализируем приложение
+asyncio.run_coroutine_threadsafe(telegram_app.initialize(), loop).result()
+logger.info("✅ Telegram application initialized")
+
 
 @app.route('/health', methods=['GET'])
 def health():
@@ -45,12 +63,12 @@ def webhook():
     try:
         update = Update.de_json(request.get_json(force=True), telegram_app.bot)
         
-        # Обрабатываем update в sync режиме
-        import asyncio
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(telegram_app.process_update(update))
-        loop.close()
+        # Обрабатываем update асинхронно в фоновом потоке
+        # Возвращаем 200 сразу (Telegram требует быстрого ответа)
+        asyncio.run_coroutine_threadsafe(
+            telegram_app.process_update(update),
+            loop
+        )
         
         return jsonify({"status": "ok"})
     except Exception as e:
