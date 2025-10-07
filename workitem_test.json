@@ -1,0 +1,12 @@
+{
+  "activityId": "AutoCAD.PlotToPDF+25_0",
+  "arguments": {
+    "HostDwg": {
+      "url": "https://storage.googleapis.com/btibot-processed/raw/1759837370/Plan 2025-10-03 155019_export_2D_room_height.dwg"
+    },
+    "Result": {
+      "url": "https://storage.googleapis.com/btibot-processed/aps_connection_test/result.dwg?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=telegram-bot-sa%40talkhint.iam.gserviceaccount.com%2F20251007%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20251007T204631Z&X-Goog-Expires=3600&X-Goog-SignedHeaders=host&X-Goog-Signature=89e73d7c76ca67597f32d50b26267af0d75cc2fd9cc2e4ebf3911b293b1f4029a8cd943dd609453d586fa56b2dda8117ce3d6c0b6eaa72517bd85115d7c9168e52a9af3d08df863c7b1da61396c33fbfdc5ea5d8f3fe9d0e9249a1052ed0e3156b5031807c2040736857734409a89b5f9938fb47f264b008a5ae92d8994e5e59d9fcfd15add7ab56e980839e039b23f7e2e698566e8326bcc85658f563286de4cda1d37cebad485ed4fc2d7e06ad7d322d6251b2607ac97dd52e91780a2bba923602a3830dae6fda7807a70546d13ab7114643f3a5b70b81966679a176681d89cf4c45e8fa90a60ac7ccb098dd6a6cf05fea6baf8fc0e85ae7922e55a3f0242b",
+      "verb": "put"
+    }
+  }
+}

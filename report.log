@@ -1,0 +1,90 @@
+[10/07/2025 20:46:31] Job information:
+{
+  "CommandLine": [
+    "$(engine.path)\\accoreconsole.exe /i \"$(args[HostDwg].path)\" /s $(settings[script].path) /suppressGraphics"
+  ],
+  "Settings": {
+    "script": {
+      "value": "_tilemode 0 -export _pdf _all result.pdf\n"
+    },
+    "dasOpenNetwork": {
+      "value": "true",
+      "isEnvironmentVariable": true
+    }
+  },
+  "Id": "869507298c054b56af4658a3dc5aae52",
+  "ActivityId": "AutoCAD.PlotToPDF+25_0",
+  "EngineId": "Autodesk.AutoCAD_25_0!39",
+  "Apps": [],
+  "BoundArguments": {
+    "HostDwg": {
+      "localName": "$(HostDwg)",
+      "url": "https://storage.googleapis.com/Masked:iBotZKrarT0sTUlLvNkKZ7F/gNU=",
+      "verb": "get"
+    },
+    "Result": {
+      "localName": "result.pdf",
+      "url": "https://storage.googleapis.com/Masked:ggpCVY8LNEWMo/wEalYLJerM4i0=",
+      "verb": "put"
+    }
+  },
+  "Quotas": {
+    "limitProcessingTimeSec": 100,
+    "limitTotalUncompressedAppsSizeInMB": 500
+  }
+}
+[10/07/2025 20:46:31] Starting work item 869507298c054b56af4658a3dc5aae52
+[10/07/2025 20:46:31] Start download phase.
+[10/07/2025 20:46:31] Start downloading input: verb - 'Get', url - 'https://storage.googleapis.com/btibot-processed/raw/1759837370/Plan 2025-10-03 155019_export_2D_room_height.dwg'
+[10/07/2025 20:46:32] End downloading file. Source=https://storage.googleapis.com/btibot-processed/raw/1759837370/Plan 2025-10-03 155019_export_2D_room_height.dwg,LocalFile=C:\DARoot\Jobs\869507298c054b56af4658a3dc5aae52\Plan 2025-10-03 155019_export_2D_room_height.dwg,BytesDownloaded=15046,Duration=231ms
+[10/07/2025 20:46:32] End download phase successfully.
+[10/07/2025 20:46:32] Start preparing script and command line parameters.
+[10/07/2025 20:46:32] Command line: [ /i "C:\DARoot\Jobs\869507298c054b56af4658a3dc5aae52\Plan 2025-10-03 155019_export_2D_room_height.dwg" /s C:\DARoot\Jobs\869507298c054b56af4658a3dc5aae52\setting_script.scr /suppressGraphics]
+[10/07/2025 20:46:32] End preparing script and command line parameters.
+[10/07/2025 20:46:32] Start script phase.
+[10/07/2025 20:46:32] Start AutoCAD Core Engine standard output dump.
+[10/07/2025 20:46:32] Redirect stdout (file: C:\DARoot\Jobs\869507298c054b56af4658a3dc5aae52\tmp\accc13962).
+[10/07/2025 20:46:32] AcCoreConsole: StdOutConsoleMode: processed-output: disabled,auto
+[10/07/2025 20:46:32] AutoCAD Core Engine Console - Copyright 2024 Autodesk, Inc.  All rights reserved. (V.101.Z.142)
+[10/07/2025 20:46:32] Execution Path:
+[10/07/2025 20:46:32] C:\DARoot\AcesRoot\25.0\coreEngine\Exe\accoreconsole.exe
+[10/07/2025 20:46:32] Current Directory: C:\DARoot\Jobs\869507298c054b56af4658a3dc5aae52
+[10/07/2025 20:46:32] CER Report Directory: C:\DARoot\Jobs\869507298c054b56af4658a3dc5aae52\ErrorReports
+[10/07/2025 20:46:32] Isolating to regkey=HKEY_CURRENT_USER\SOFTWARE\AppDataLow\Software\Autodesk\CoreUser\WorkItem_869507298c054b56af4658a3dc5aae52, userDataFolder=C:\DARoot\Jobs\869507298c054b56af4658a3dc5aae52\userdata.
+[10/07/2025 20:46:32] INFO: Isolation create time: 157 ms.
+[10/07/2025 20:46:32] Version Number: V.101.Z.142 (UNICODE)
+[10/07/2025 20:46:32] LogFilePath has been set to the working folder.
+[10/07/2025 20:46:33] Regenerating model.
+[10/07/2025 20:46:33] AutoCAD menu utilities loaded.
+[10/07/2025 20:46:33] Command:
+[10/07/2025 20:46:33] Command:
+[10/07/2025 20:46:33] Command:
+[10/07/2025 20:46:33] Command: _tilemode
+[10/07/2025 20:46:33] Enter new value for TILEMODE <1>: 0 Regenerating layout.
+[10/07/2025 20:46:33] Command: -export Enter file format [Dwf/dwfX/Pdf] <dwfX>_pdf Enter plot area [Current layout/All layouts]<Current Layout>: _all
+[10/07/2025 20:46:33] Enter file name <Plan 2025-10-03 155019_export_2D_room_height-PaperSpaceLayout.pdf>: result.pdf
+[10/07/2025 20:46:33] Effective plotting area:  200.00 wide by 263.00 high
+[10/07/2025 20:46:33] Plotting viewport 1.
+[10/07/2025 20:46:34] End AutoCAD Core Engine standard output dump.
+[10/07/2025 20:46:34] Error: AutoCAD Core Console output contains error(s).
+[10/07/2025 20:46:34] End script phase.
+[10/07/2025 20:46:34] Start upload phase.
+[10/07/2025 20:46:34] Uploading 'C:\DARoot\Jobs\869507298c054b56af4658a3dc5aae52\result.pdf': verb - 'Put', url - 'https://storage.googleapis.com/btibot-processed/aps_connection_test/result.dwg?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=telegram-bot-sa%40talkhint.iam.gserviceaccount.com%2F20251007%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20251007T204631Z&X-Goog-Expires=3600&X-Goog-SignedHeaders=host&X-Goog-Signature=89e73d7c76ca67597f32d50b26267af0d75cc2fd9cc2e4ebf3911b293b1f4029a8cd943dd609453d586fa56b2dda8117ce3d6c0b6eaa72517bd85115d7c9168e52a9af3d08df863c7b1da61396c33fbfdc5ea5d8f3fe9d0e9249a1052ed0e3156b5031807c2040736857734409a89b5f9938fb47f264b008a5ae92d8994e5e59d9fcfd15add7ab56e980839e039b23f7e2e698566e8326bcc85658f563286de4cda1d37cebad485ed4fc2d7e06ad7d322d6251b2607ac97dd52e91780a2bba923602a3830dae6fda7807a70546d13ab7114643f3a5b70b81966679a176681d89cf4c45e8fa90a60ac7ccb098dd6a6cf05fea6baf8fc0e85ae7922e55a3f0242b'
+[10/07/2025 20:46:34] End upload phase successfully.
+[10/07/2025 20:46:34] Job finished with result Succeeded
+[10/07/2025 20:46:34] Job Status:
+{
+  "status": "success",
+  "reportUrl": "https://dasprod-store.s3.amazonaws.com/workItem/BotBti/869507298c054b56af4658a3dc5aae52/report?X-Amz-Expires=8100&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBUaCXVzLWVhc3QtMSJHMEUCIFCMj947Fs7iK%2FCvmlAvhTzcXguOdR9l4pn1nBsi9QEuAiEArzaOvy6iJbe8K8r3ZEBqaGIkA6idjs63%2FKnMNQyklTUqiQMIrf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgwyMjA0NzMxNTIzMTAiDHhUinh1d2MQCY%2BdISrdAnohNRIGyT4ogIxTQrhvtdetWUCnXKLUOYn8KjWxsEHvk04uS19LJi%2BboSCMZw26Me6PiL0WBR94kA5M6EUoKw6nVNOK54ZnmYP8vGiNVLIT5TXcMIyQadEiUqLjRSE1HjIgi7sYsHmgE9EWJcBJ4Ya9nLYBJ5elbsR0%2FmFgfSBcSZ7%2F93PTg%2F4AK1UeEDaEEY%2B8Q71lD8z3ixhItAKMI4kW9XHuC9quFDg6ZT2lyihb%2Bl0LIqaE0GZg%2BddMW%2FRmxnMJmciSpE%2FK06cLrzdMjRamiyMl2PvWXC3Dr0eBOh7vRJuas5z0zKXiT9vLYbCWkaK0Qfxa%2FnEILPaLbJ3oFKVRNDcRtkQtiiNxJfF3bdDnV2OZfWoVoZWEt4ematBNYUZ%2BJIAkRhabkoWeCEV7nAcMaUTITX6%2FiswwJgWEJrEcUN4aOsvhzR1aOZd1pi5ItgJAoozZgwXTWGwG%2FxMwm%2BuVxwY6ngHtnqnFLpMzaL6xgCRYgebh613jcjkUOdKDQq3TEWYBGwQn3p%2F7s3X4D1iOrTIlHa%2FrWXbr7Y8ttctDUMGfd8WGZMw96QVaRImiaNr5zgBTQdC9NYEl1qtCdoE2%2FuqmhNX342QYrgVOCEVVidEejfc5plKF%2FL8wEBtK1yFo%2BtlO6i%2FDRlmfURPVzZ8RHJFOcp8pQiH32O7ilnWL6p7xyA%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIATGVJZKM3D66YDAUW%2F20251007%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251007T204631Z&X-Amz-SignedHeaders=host&X-Amz-Signature=090ae3e18ef6a433a0b56d29b4a0e5cff9da86461bff09669baa5cde5251d486",
+  "activityId": "AutoCAD.PlotToPDF+25_0",
+  "stats": {
+    "timeQueued": "2025-10-07T20:46:31.7178594Z",
+    "timeDownloadStarted": "2025-10-07T20:46:31.7946022Z",
+    "timeInstructionsStarted": "2025-10-07T20:46:32.0947529Z",
+    "timeInstructionsEnded": "2025-10-07T20:46:34.474405Z",
+    "timeUploadEnded": "2025-10-07T20:46:34.6365064Z",
+    "bytesDownloaded": 15046,
+    "bytesUploaded": 3214
+  },
+  "id": "869507298c054b56af4658a3dc5aae52"
+}
