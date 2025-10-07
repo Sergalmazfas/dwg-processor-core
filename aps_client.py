@@ -41,7 +41,7 @@ class APSClient:
         
         return response.json()["access_token"]
     
-    def submit_workitem_with_template(self, input_dwg_url, template_url, output_dwg_url):
+    def submit_workitem_with_template(self, input_dwg_url, template_url, output_dwg_url, use_bte_activity=False):
         """
         Создает WorkItem для DWG→DWG обработки с BTE шаблоном
         
@@ -59,24 +59,48 @@ class APSClient:
             "Content-Type": "application/json"
         }
         
-        # Activity для DWG→DWG с шаблоном
-        # Используем стандартную Activity AutoCAD.PlotToPDF для обработки
-        # (Базовая Activity которая всегда доступна)
-        body = {
-            "activityId": "Autodesk.AutoCAD+24",
-            "arguments": {
-                "HostDwg": {
-                    "url": input_dwg_url
-                },
-                "Result": {
-                    "url": output_dwg_url,
-                    "verb": "put"
+        # Выбираем Activity в зависимости от параметра
+        if use_bte_activity:
+            # Кастомная BTE Activity с вставкой шаблона
+            # Используем nickname "BotBti" вместо полного Client ID
+            activity_id = "BotBti.BTEInsertTemplate+1"
+            body = {
+                "activityId": activity_id,
+                "arguments": {
+                    "HostDWG": {
+                        "url": input_dwg_url,
+                        "verb": "get"
+                    },
+                    "BteTemplate": {
+                        "url": template_url,
+                        "verb": "get"
+                    },
+                    "ResultDWG": {
+                        "url": output_dwg_url,
+                        "verb": "put"
+                    }
                 }
             }
-        }
+            logger.info(f"🎯 Using BTE Activity with template")
+        else:
+            # Стандартная Activity AutoCAD.PlotToPDF+25_0 (проверено, работает)
+            body = {
+                "activityId": "AutoCAD.PlotToPDF+25_0",
+                "arguments": {
+                    "HostDwg": {
+                        "url": input_dwg_url
+                    },
+                    "Result": {
+                        "url": output_dwg_url,
+                        "verb": "put"
+                    }
+                }
+            }
         
         logger.info(f"📤 Creating WorkItem with activityId: {body['activityId']}")
         logger.info(f"📥 Input DWG: {input_dwg_url[:80]}...")
+        if use_bte_activity:
+            logger.info(f"📐 Template: {template_url[:80]}...")
         logger.info(f"📤 Output DWG: {output_dwg_url[:80]}...")
         
         response = requests.post(

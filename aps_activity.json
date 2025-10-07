@@ -1,0 +1,32 @@
+{
+  "id": "BTEInsertTemplate",
+  "commandLine": [
+    "$(engine.path)\\accoreconsole.exe /i \"$(args[HostDWG].path)\" /s \"$(settings[script].path)\" /isolate"
+  ],
+  "parameters": {
+    "HostDWG": {
+      "verb": "get",
+      "localName": "input.dwg",
+      "description": "Input DWG file to process"
+    },
+    "BteTemplate": {
+      "verb": "get",
+      "localName": "bti_template.dwg",
+      "description": "BTE template to insert"
+    },
+    "ResultDWG": {
+      "verb": "put",
+      "localName": "output.dwg",
+      "description": "Output DWG file with BTE template"
+    }
+  },
+  "settings": {
+    "script": {
+      "value": "INSERT bti_template.dwg 0,0 1 1 0\nQSAVE\nQUIT\n"
+    }
+  },
+  "engine": "Autodesk.AutoCAD+25_0",
+  "appbundles": [],
+  "description": "Inserts BTE template into a DWG file and saves the result"
+}
+
