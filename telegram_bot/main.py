@@ -40,11 +40,18 @@ def health():
 
 
 @app.route('/webhook', methods=['POST'])
-async def webhook():
+def webhook():
     """Webhook endpoint для Telegram"""
     try:
         update = Update.de_json(request.get_json(force=True), telegram_app.bot)
-        await telegram_app.process_update(update)
+        
+        # Обрабатываем update в sync режиме
+        import asyncio
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(telegram_app.process_update(update))
+        loop.close()
+        
         return jsonify({"status": "ok"})
     except Exception as e:
         logger.exception(f"❌ Error processing webhook: {e}")
@@ -75,19 +82,20 @@ def set_webhook():
 
 
 @app.route('/', methods=['POST'])
-async def index():
+def index():
     """Главный endpoint (alias для webhook)"""
-    return await webhook()
+    return webhook()
 
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
+    gcs_bucket = os.environ.get("GCS_BUCKET", "btibot-processed")
     
     # Логирование запуска
     logger.info("=" * 50)
     logger.info("🤖 Telegram BTI Bot starting...")
     logger.info(f"   Port: {port}")
-    logger.info(f"   GCS Bucket: {GCS_BUCKET}")
+    logger.info(f"   GCS Bucket: {gcs_bucket}")
     logger.info("=" * 50)
     
     # Запуск Flask
