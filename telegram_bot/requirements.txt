@@ -1,0 +1,18 @@
+# Flask web framework
+flask==3.0.0
+werkzeug==3.0.1
+
+# Telegram Bot
+python-telegram-bot==20.7
+
+# HTTP requests
+requests==2.31.0
+
+# Google Cloud
+google-cloud-storage==2.10.0
+google-cloud-secret-manager==2.16.4
+google-auth==2.23.4
+
+# Production server
+gunicorn==21.2.0
+

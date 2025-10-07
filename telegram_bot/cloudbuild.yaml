@@ -1,0 +1,48 @@
+steps:
+  # Build Docker image для Telegram бота
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/telegram-bti-bot:latest'
+      - '.'
+    dir: 'telegram_bot'
+  
+  # Push Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/telegram-bti-bot:latest']
+  
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'telegram-bti-bot'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/telegram-bti-bot:latest'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--timeout'
+      - '900'
+      - '--memory'
+      - '1Gi'
+      - '--cpu'
+      - '1'
+      - '--max-instances'
+      - '5'
+      - '--min-instances'
+      - '0'
+      - '--set-env-vars'
+      - 'GCS_BUCKET=btibot-processed,DWG_PROCESSOR_URL=https://dwg-processor-core-637190449180.europe-west1.run.app'
+      - '--set-secrets'
+      - 'BOT_TOKEN=BOT_TOKEN:latest'
+      - '--service-account'
+      - '637190449180-compute@developer.gserviceaccount.com'
+
+images:
+  - 'gcr.io/$PROJECT_ID/telegram-bti-bot:latest'
+
