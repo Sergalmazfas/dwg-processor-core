@@ -59,11 +59,10 @@ class APSClient:
             "Content-Type": "application/json"
         }
         
-        # Activity для DWG→DWG с шаблоном
-        # Используем стандартную Activity AutoCAD.PlotToPDF для обработки
-        # (Базовая Activity которая всегда доступна)
+        # Activity для обработки DWG
+        # Используем стандартную Activity AutoCAD.PlotToPDF+25_0 (всегда доступна)
         body = {
-            "activityId": "Autodesk.AutoCAD+24",
+            "activityId": "AutoCAD.PlotToPDF+25_0",
             "arguments": {
                 "HostDwg": {
                     "url": input_dwg_url
