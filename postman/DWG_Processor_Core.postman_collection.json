@@ -1,0 +1,276 @@
+{
+	"info": {
+		"_postman_id": "dwg-processor-core-2025",
+		"name": "DWG Processor Core - API Tests",
+		"description": "Тестирование dwg-processor-core и telegram-bti-bot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Core Service Tests",
+			"item": [
+				{
+					"name": "1. Health Check - Core",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://dwg-processor-core-637190449180.europe-west1.run.app/health",
+							"protocol": "https",
+							"host": [
+								"dwg-processor-core-637190449180",
+								"europe-west1",
+								"run",
+								"app"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Проверка здоровья dwg-processor-core сервиса"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Process DWG - Core API",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"file_url\": \"gs://btibot-processed/raw/1759837370/Plan 2025-10-03 155019_export_2D_room_height.dwg\",\n  \"template\": \"bti_template.dwg\"\n}"
+						},
+						"url": {
+							"raw": "https://dwg-processor-core-637190449180.europe-west1.run.app/process-dwg",
+							"protocol": "https",
+							"host": [
+								"dwg-processor-core-637190449180",
+								"europe-west1",
+								"run",
+								"app"
+							],
+							"path": [
+								"process-dwg"
+							]
+						},
+						"description": "Обработка DWG через APS с BTE шаблоном"
+					},
+					"response": []
+				}
+			],
+			"description": "Тесты для dwg-processor-core (ядро)"
+		},
+		{
+			"name": "Telegram Bot Tests",
+			"item": [
+				{
+					"name": "1. Health Check - Bot",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://telegram-bti-bot-637190449180.europe-west1.run.app/health",
+							"protocol": "https",
+							"host": [
+								"telegram-bti-bot-637190449180",
+								"europe-west1",
+								"run",
+								"app"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Проверка здоровья telegram-bti-bot сервиса"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Set Webhook",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://telegram-bti-bot-637190449180.europe-west1.run.app/set-webhook",
+							"protocol": "https",
+							"host": [
+								"telegram-bti-bot-637190449180",
+								"europe-west1",
+								"run",
+								"app"
+							],
+							"path": [
+								"set-webhook"
+							]
+						},
+						"description": "Установка webhook для Telegram бота"
+					},
+					"response": []
+				}
+			],
+			"description": "Тесты для telegram-bti-bot"
+		},
+		{
+			"name": "Full Pipeline Test",
+			"item": [
+				{
+					"name": "1. Get Forge Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"forge_token\", jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{forge_client_id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{forge_client_secret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "code:all data:read data:write",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://developer.api.autodesk.com/authentication/v2/token",
+							"protocol": "https",
+							"host": [
+								"developer",
+								"api",
+								"autodesk",
+								"com"
+							],
+							"path": [
+								"authentication",
+								"v2",
+								"token"
+							]
+						},
+						"description": "Получить Autodesk Forge Access Token"
+					},
+					"response": []
+				},
+				{
+					"name": "2. List Activities",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{forge_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://developer.api.autodesk.com/da/us-east/v3/activities",
+							"protocol": "https",
+							"host": [
+								"developer",
+								"api",
+								"autodesk",
+								"com"
+							],
+							"path": [
+								"da",
+								"us-east",
+								"v3",
+								"activities"
+							]
+						},
+						"description": "Список доступных Activities"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Process DWG (Full Pipeline)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"workitem_id\", jsonData.workitem_id);",
+									"pm.environment.set(\"output_url\", jsonData.output_url);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"file_url\": \"gs://btibot-processed/raw/1759837370/Plan 2025-10-03 155019_export_2D_room_height.dwg\",\n  \"template\": \"bti_template.dwg\"\n}"
+						},
+						"url": {
+							"raw": "https://dwg-processor-core-637190449180.europe-west1.run.app/process-dwg",
+							"protocol": "https",
+							"host": [
+								"dwg-processor-core-637190449180",
+								"europe-west1",
+								"run",
+								"app"
+							],
+							"path": [
+								"process-dwg"
+							]
+						},
+						"description": "Полный цикл: DWG → APS → DWG с BTE шаблоном"
+					},
+					"response": []
+				}
+			],
+			"description": "Полный тест DWG→APS→DWG pipeline"
+		}
+	],
+	"variable": [
+		{
+			"key": "core_url",
+			"value": "https://dwg-processor-core-637190449180.europe-west1.run.app",
+			"type": "string"
+		},
+		{
+			"key": "bot_url",
+			"value": "https://telegram-bti-bot-637190449180.europe-west1.run.app",
+			"type": "string"
+		}
+	]
+}
+
