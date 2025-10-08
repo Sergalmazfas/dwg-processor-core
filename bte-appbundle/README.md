@@ -32,59 +32,100 @@ bte-appbundle/
 
 ---
 
-## ⚠️ ВАЖНО: Компиляция DLL
+## 🚀 АВТОМАТИЧЕСКАЯ СБОРКА DLL (БЕЗ AUTOCAD!)
 
-### **Проблема:**
-Для компиляции InsertTemplate.cs → InsertTemplate.dll нужен:
-- Windows с установленным AutoCAD 2025
-- Или Visual Studio с AutoCAD SDK
+### **🔧 Быстрая сборка с PowerShell:**
 
-### **Решение для нашего случая:**
+**Шаг 1: Запустить автоматический скрипт**
+```powershell
+# На Windows с PowerShell:
+pwsh build_dll.ps1
 
-**Опция 1: Использовать pre-compiled DLL**
-```bash
-# Скачать готовый DLL из BTI_TemplateAppBundle (если есть)
-# Или использовать простой DLL для теста
+# На macOS/Linux с PowerShell Core:
+pwsh build_dll.ps1
 ```
 
-**Опция 2: Скомпилировать на Windows (локально)**
+**Что делает скрипт:**
+1. ✅ Скачивает AutoCAD SDK DLLs с GitHub
+2. ✅ Компилирует InsertTemplate.cs → InsertTemplate.dll
+3. ✅ Создает ZIP архив InsertTemplateAppBundle.zip
+4. ✅ Готов к регистрации в APS!
+
+**Результат:**
+```
+✅ SDK DLLs downloaded
+✅ InsertTemplate.dll compiled (XX KB)
+✅ AppBundle ZIP created (XX KB)
+```
+
+### **Альтернативные опции:**
+
+**Опция 1: Автоматический скрипт (рекомендуется) ⭐**
+```bash
+pwsh build_dll.ps1
+```
+
+**Опция 2: Компиляция вручную на Windows**
 ```bash
 csc /target:library /out:Contents/Windows/InsertTemplate.dll InsertTemplate.cs \
     /r:"C:\Program Files\Autodesk\AutoCAD 2025\acdbmgd.dll" \
     /r:"C:\Program Files\Autodesk\AutoCAD 2025\acmgd.dll"
 ```
 
-**Опция 3: Использовать GitHub Actions с Windows runner**
-```yaml
-runs-on: windows-latest
-# Установить AutoCAD SDK
-# Скомпилировать DLL
+**Опция 3: Использовать pre-compiled DLL**
+```bash
+# Если DLL уже есть, просто положить в Contents/Windows/
 ```
 
 ---
 
 ## 🚀 Регистрация в APS (после компиляции DLL)
 
-### **Шаг 1: Создать ZIP**
-```bash
-cd bte-appbundle
-zip -r InsertTemplateAppBundle.zip PackageContents.xml Contents package.json
-```
+**После успешной сборки через `build_dll.ps1` выполните:**
 
-### **Шаг 2: Зарегистрировать**
+### **Шаг 1: Зарегистрировать AppBundle**
 ```bash
-./scripts/register_appbundle.sh
+cd scripts
+python register_appbundle.py
 ```
+**Что происходит:**
+- ✅ POST /appbundles - создается AppBundle в APS
+- ✅ Получаем uploadParameters (S3 URL)
 
-### **Шаг 3: Создать Activity**
+### **Шаг 2: Загрузить ZIP на S3**
 ```bash
-./scripts/register_activity.sh
+python upload_appbundle.py
 ```
+**Что происходит:**
+- ✅ ZIP загружается на S3 сервера Autodesk
+- ✅ AppBundle доступен для Activities
 
-### **Шаг 4: Протестировать**
+### **Шаг 3: Создать Activity с AppBundle**
 ```bash
-./scripts/test_workitem.sh
+python register_activity.py
 ```
+**Что происходит:**
+- ✅ POST /activities - создается Activity
+- ✅ Activity использует ваш AppBundle
+- ✅ Команда INSERTBTE готова к выполнению
+
+### **Шаг 4: Протестировать WorkItem**
+```bash
+python test_workitem.py
+```
+**Что происходит:**
+- ✅ POST /workitems - запускается обработка
+- ✅ DWG обрабатывается на серверах Autodesk
+- ✅ INSERTBTE выполняется на C:\DARoot\ (Windows)
+
+### **Шаг 5: Проверить отчет**
+```bash
+bash verify_report.sh
+```
+**Что происходит:**
+- ✅ Скачивается report.log от Autodesk
+- ✅ Проверяется наличие команд INSERTBTE, QSAVE, QUIT
+- ✅ Подтверждается успешное выполнение
 
 ---
 

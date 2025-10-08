@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-Регистрация AppBundle в Autodesk APS
-Официальная документация: https://aps.autodesk.com/en/docs/design-automation/v3/reference/http/appbundles-POST/
+Создание Activity с AppBundle в Autodesk APS
+Официальная документация: https://aps.autodesk.com/en/docs/design-automation/v3/reference/http/activities-POST/
 """
 
 import json
 import requests
 import sys
-import os
 from google.cloud import secretmanager
 
 
@@ -35,7 +34,7 @@ def get_access_token():
         timeout=30
     )
     response.raise_for_status()
-    return response.json()["access_token"], client_id
+    return response.json()["access_token"]
 
 
 def get_nickname(token):
@@ -51,24 +50,14 @@ def get_nickname(token):
 
 def main():
     print("=" * 70)
-    print("📦 РЕГИСТРАЦИЯ APPBUNDLE В AUTODESK APS")
+    print("⚙️ СОЗДАНИЕ ACTIVITY С APPBUNDLE")
     print("=" * 70)
     print("\n📚 Официальная документация:")
-    print("   https://aps.autodesk.com/en/docs/design-automation/v3/reference/http/appbundles-POST/")
-    
-    # Проверка ZIP файла
-    zip_file = "../InsertTemplateAppBundle.zip"
-    if not os.path.exists(zip_file):
-        print(f"\n❌ Файл {zip_file} не найден!")
-        print("   Сначала создайте ZIP архив:")
-        print("   cd .. && zip -r InsertTemplateAppBundle.zip PackageContents.xml Contents package.json")
-        return 1
-    
-    print(f"\n✅ ZIP файл найден: {zip_file}")
+    print("   https://aps.autodesk.com/en/docs/design-automation/v3/reference/http/activities-POST/")
     
     # Получаем токен
     print("\n🔸 Получение Access Token...")
-    token, client_id = get_access_token()
+    token = get_access_token()
     print(f"✅ Token получен")
     
     # Получаем nickname
@@ -76,43 +65,73 @@ def main():
     nickname = get_nickname(token)
     print(f"   Nickname: {nickname}")
     
-    # Загружаем package.json
-    with open('../package.json', 'r') as f:
-        package_data = json.load(f)
+    # Создаем Activity
+    activity_data = {
+        "id": f"{nickname}.BTEInsertActivity",
+        "engine": "Autodesk.AutoCAD+25_0",
+        "appbundles": [f"{nickname}.InsertTemplateAppBundle+1"],
+        "commandLine": [
+            "$(engine.path)\\\\accoreconsole.exe",
+            "/i", "\"$(args[HostDWG].path)\"",
+            "/al", "\"$(appbundles[InsertTemplateAppBundle].path)\"",
+            "/s", "\"$(settings[script].path)\"",
+            "/isolate"
+        ],
+        "parameters": {
+            "HostDWG": {
+                "verb": "get",
+                "localName": "input.dwg",
+                "description": "Input DWG file"
+            },
+            "ResultDWG": {
+                "verb": "put",
+                "localName": "output.dwg",
+                "description": "Output DWG with BTE template"
+            }
+        },
+        "settings": {
+            "script": {
+                "value": "INSERTBTE\\nQSAVE\\nQUIT\\n"
+            }
+        },
+        "description": "Inserts BTE template using custom AppBundle"
+    }
     
-    # Создаем AppBundle
-    print("\n🔸 Создание AppBundle...")
-    print(f"   ID: {nickname}.{package_data['id']}")
-    
-    package_data['id'] = f"{nickname}.{package_data['id']}"
+    print("\n🔸 Создание Activity...")
+    print(f"   ID: {activity_data['id']}")
+    print(f"   AppBundle: {activity_data['appbundles'][0]}")
+    print(f"   Command: INSERTBTE → QSAVE → QUIT")
     
     response = requests.post(
-        "https://developer.api.autodesk.com/da/us-east/v3/appbundles",
+        "https://developer.api.autodesk.com/da/us-east/v3/activities",
         headers={
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json"
         },
-        json=package_data,
+        json=activity_data,
         timeout=30
     )
     
     if response.status_code in [200, 201]:
         result = response.json()
-        print(f"✅ AppBundle создан!")
+        print(f"\n✅ Activity создана!")
         print(f"   ID: {result.get('id')}")
         print(f"   Version: {result.get('version')}")
         
-        # Сохраняем uploadParameters
-        with open('upload_params.json', 'w') as f:
-            json.dump(result.get('uploadParameters', {}), f, indent=2)
+        # Сохраняем для теста
+        with open('activity_info.json', 'w') as f:
+            json.dump({
+                "id": result.get('id'),
+                "version": result.get('version')
+            }, f, indent=2)
         
-        print(f"\n📤 Upload parameters сохранены: upload_params.json")
         print(f"\n⏭️ Следующий шаг:")
-        print(f"   python upload_appbundle.py")
+        print(f"   python test_workitem.py")
         
         return 0
     elif response.status_code == 409:
-        print(f"⚠️ AppBundle уже существует")
+        print(f"⚠️ Activity уже существует")
+        print(f"   ID: {nickname}.BTEInsertActivity")
         return 0
     else:
         print(f"❌ Ошибка: {response.status_code}")
